@@ -5,9 +5,7 @@
 - 📱 Responsive design with flutter_screenutil  
 - 🔑 Login & Register screens  
 - 🏠 Home, Explore, Favorites, and Profile tabs  
-- 🎶 Custom reusable widgets (buttons, text fields, colors, images)  
-- 🌗 Dark theme interface
-  
+- 🎶 Custom reusable widgets (buttons, text fields, colors, images)    
 - ## 🚀 Future Work
 - 🎭 Custom app theme (light & dark modes)  
 - 🌐 API integration to fetch real music data  
