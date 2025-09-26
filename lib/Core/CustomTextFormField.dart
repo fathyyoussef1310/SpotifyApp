@@ -19,10 +19,12 @@ class Customtextformfield extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      style: GoogleFonts.poppins(color: ColorsManager.white,fontSize: 16.sp,fontWeight: FontWeight.w700),
       decoration: InputDecoration(
         label: Text(label),
         labelStyle: GoogleFonts.poppins(color: color,fontSize: 16.sp,fontWeight: FontWeight.w700),
         hintText: hint,
+        hintStyle: GoogleFonts.poppins(color: ColorsManager.green,fontSize: 16.sp,fontWeight: FontWeight.w700),
         suffixIcon: suffixIcon!=null ? Icon(suffixIcon,color: color,) : null,
         prefixIcon: prefixIcon!=null ? Icon(prefixIcon,color: color,) : null,
         border: OutlineInputBorder(

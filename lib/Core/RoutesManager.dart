@@ -24,9 +24,9 @@ class RoutesManager {
       case chooseTheme:
         return CupertinoPageRoute(builder: (_) => const Choosetheme());
       case loginScreen:
-        return CupertinoPageRoute(builder: (_) => const Loginscreen());
+        return CupertinoPageRoute(builder: (_) =>  Loginscreen());
       case registerScreen:
-        return CupertinoPageRoute(builder: (_) => const Registerscreen());
+        return CupertinoPageRoute(builder: (_) =>  Registerscreen());
       case chooseLoginRegister:
         return CupertinoPageRoute(builder: (_) => const ChooseLoginRegister());
     case profileScreen:
