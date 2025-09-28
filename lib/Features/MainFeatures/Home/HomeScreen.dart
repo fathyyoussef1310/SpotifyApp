@@ -8,7 +8,7 @@ class Homescreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    backgroundColor: ColorsManager.white,
+    backgroundColor: ColorsManager.whiteGrey,
     );
   }
 }

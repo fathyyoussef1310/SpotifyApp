@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:spotifyyapp/Features/Onboarding/OnboardingScreen.dart';
 import '../Features/Auth/Choose_Login_register.dart';
 import '../Features/Auth/LoginScreen.dart';
 import '../Features/Auth/RegisterScreen.dart';
@@ -23,6 +24,8 @@ class RoutesManager {
     switch (settings.name) {
       case chooseTheme:
         return CupertinoPageRoute(builder: (_) => const Choosetheme());
+        case onboardingScreen:
+        return CupertinoPageRoute(builder: (_) => const OnBoardingScreen());
       case loginScreen:
         return CupertinoPageRoute(builder: (_) =>  Loginscreen());
       case registerScreen:
