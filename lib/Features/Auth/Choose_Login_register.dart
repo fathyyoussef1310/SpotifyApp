@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Core/ColorsManager.dart';
 import '../../Core/ImagesManager.dart';
@@ -9,10 +10,16 @@ import '../../Core/Widgets/CustomeElevatedButton.dart';
 import '../../Core/Widgets/TextButton.dart';
 class ChooseLoginRegister extends StatelessWidget {
   const ChooseLoginRegister({super.key});
+  Future<void> _completeAuth(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('onboarding_seen', true);
+    Navigator.pushReplacementNamed(context, RoutesManager.chooseLoginRegister);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorsManager.darkGrey,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child:Stack(
           children: [
@@ -39,6 +46,7 @@ class ChooseLoginRegister extends StatelessWidget {
                       ),
                       SizedBox(width: 40.w,),
                       CustomElevatedButton(onPressed: (){
+                        _completeAuth(context);
                         Navigator.pushNamed(context, RoutesManager.registerScreen);
                       }, title: "Register", backgroundColor: ColorsManager.green, foregroundColor: ColorsManager.white),
                     ],

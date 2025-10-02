@@ -30,10 +30,10 @@ class _LayoutScreenState extends State<LayoutScreen> {
       extendBody: true,
       body: _tabs[_SelectedTab],
       bottomNavigationBar: Container(
-        height: kBottomNavigationBarHeight+30.h,
+        height: kBottomNavigationBarHeight + 30.h,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Colors.transparent,
+          color: Theme.of(context).scaffoldBackgroundColor,
           borderRadius: BorderRadius.circular(5.r),
         ),
         child: Row(

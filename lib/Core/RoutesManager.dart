@@ -20,10 +20,11 @@ class RoutesManager {
   static const String homeScreen = '/home';
   static const String favorites='/favourites';
   static const String chooseLoginRegister = '/chooseLoginRegister';
+  static const String  choosetheme= '/chooseTheme';
   static Route<dynamic>? getRoute(RouteSettings settings) {
     switch (settings.name) {
       case chooseTheme:
-        return CupertinoPageRoute(builder: (_) => const Choosetheme());
+        return CupertinoPageRoute(builder: (_) =>  Choosetheme());
         case onboardingScreen:
         return CupertinoPageRoute(builder: (_) => const OnBoardingScreen());
       case loginScreen:

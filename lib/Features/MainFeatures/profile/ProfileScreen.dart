@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../../Core/ColorsManager.dart';
 
 class Profilescreen extends StatelessWidget {
@@ -7,8 +6,10 @@ class Profilescreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-    backgroundColor: ColorsManager.darkBlack,
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body:  Center(child: Text("Profile Screen", style: TextStyle(fontSize: 20),),
+      ),
     );
   }
 }

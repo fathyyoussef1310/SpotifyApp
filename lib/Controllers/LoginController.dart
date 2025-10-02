@@ -6,8 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotifyyapp/ApiEndpoints/ApiEndpoints.dart';
 import 'package:spotifyyapp/Core/ColorsManager.dart';
 import 'package:spotifyyapp/Core/RoutesManager.dart';
-
-
 class LoginController  extends GetxController{
     var isLoading=false.obs;
     TextEditingController emailController=TextEditingController();
@@ -26,7 +24,9 @@ class LoginController  extends GetxController{
         http.Response response = await http.post(uri, headers: headers, body: jsonEncode(body),);
         if(response.statusCode==200)
         {
-          final json=jsonDecode(response.body);
+          final json = jsonDecode(response.body);
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setBool("Auth", true);
           Get.snackbar("Success", "Successful LogIn",
           colorText: ColorsManager.whiteGrey,
             backgroundColor: ColorsManager.green,

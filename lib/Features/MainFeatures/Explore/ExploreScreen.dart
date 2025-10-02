@@ -7,8 +7,8 @@ class ExploreScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-     backgroundColor: ColorsManager.green,
+    return  Scaffold(
+     backgroundColor: Theme.of(context).scaffoldBackgroundColor,
     );
   }
 }
