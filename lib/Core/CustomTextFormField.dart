@@ -19,7 +19,7 @@ class Customtextformfield extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      style: GoogleFonts.poppins(color: ColorsManager.white,fontSize: 16.sp,fontWeight: FontWeight.w700),
+      style: GoogleFonts.poppins(color:  Theme.of(context).brightness == Brightness.dark ? ColorsManager.white : ColorsManager.darkBlack,fontSize: 16.sp,fontWeight: FontWeight.w700),
       decoration: InputDecoration(
         label: Text(label),
         labelStyle: GoogleFonts.poppins(color: color,fontSize: 16.sp,fontWeight: FontWeight.w700),

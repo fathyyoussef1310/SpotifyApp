@@ -12,7 +12,7 @@ class ChooseLoginRegister extends StatelessWidget {
   const ChooseLoginRegister({super.key});
   Future<void> _completeAuth(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('onboarding_seen', true);
+    await prefs.setBool('_completeAuth', true);
     Navigator.pushReplacementNamed(context, RoutesManager.chooseLoginRegister);
   }
 
@@ -40,7 +40,7 @@ class ChooseLoginRegister extends StatelessWidget {
                     children: [
                       Padding(
                         padding:  REdgeInsets.symmetric(horizontal: 50.sp,vertical: 20.sp),
-                        child: CustomTextButton(title: "Sign In",color: ColorsManager.white, onPressed: (){
+                        child: CustomTextButton(title: "Sign In",color: Theme.of(context).primaryColorDark, onPressed: (){
                           Navigator.pushNamed(context, RoutesManager.loginScreen);
                         }, size: 30.sp,),
                       ),

@@ -17,7 +17,7 @@ class Homescreen extends StatelessWidget {
        centerTitle: true,
         leading:IconButton(onPressed: (){}, icon: Icon(Icons.search_rounded,color: ColorsManager.green,)),
         actions: [
-          IconButton(onPressed: (){}, icon: Icon(Icons.more_vert,color: ColorsManager.white,)),
+          IconButton(onPressed: (){}, icon: Icon(Icons.more_vert,color: Theme.of(context).primaryColorDark,)),
         ],
       ),
     );

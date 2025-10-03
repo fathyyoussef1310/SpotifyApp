@@ -46,7 +46,7 @@ class Loginscreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("You Don't Have One ?",style: GoogleFonts.poppins(color: ColorsManager.white,fontSize: 18.sp,fontWeight: FontWeight.w200)),
+                        Text("You Don't Have One ?",style: GoogleFonts.poppins(color: Theme.of(context).primaryColorDark,fontSize: 18.sp,fontWeight: FontWeight.w200)),
                         CustomTextButton(title: "Click Here ",color: ColorsManager.green, onPressed: (){
                           Navigator.pushNamed(context, RoutesManager.registerScreen);
                         }, size: 20.sp,)

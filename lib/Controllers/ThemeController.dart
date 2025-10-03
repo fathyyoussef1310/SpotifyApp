@@ -5,7 +5,7 @@ import 'package:spotifyyapp/Confiq/ThemeManager.dart';
 
 class ThemeController extends GetxController{
  var isDark=false.obs;
- ThemeData get theme => isDark.value ? ThemeManager.darkMode : ThemeManager.light;
+ ThemeData get theme => isDark.value ? ThemeManager.dark : ThemeManager.light;
  Future<void>toggleData(bool darkMode)async{
    isDark.value=darkMode;
    Get.changeTheme(theme);
