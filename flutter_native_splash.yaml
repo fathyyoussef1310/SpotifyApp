@@ -11,7 +11,7 @@ flutter_native_splash:
     image: assets/images/LightNativeSplashScreen.png
     color: "#F2F2F2"
     icon_background_color: "#F2F2F2"
-    image_dark: assets/images/DarkTheme.png
+    image_dark: assets/images/SpotifySplash.png
     color_dark: "#070707"
     icon_background_color_dark: "#070707"
 

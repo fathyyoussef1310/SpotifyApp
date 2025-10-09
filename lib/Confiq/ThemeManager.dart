@@ -29,12 +29,12 @@ abstract class ThemeManager {
   );
   static final ThemeData dark = ThemeData(
     brightness: Brightness.dark,
-    scaffoldBackgroundColor: ColorsManager.darkGrey,
+    scaffoldBackgroundColor: ColorsManager.darkBlack,
     primaryColor: ColorsManager.green,
     appBarTheme: const AppBarTheme(
       backgroundColor: ColorsManager.Greyissh,
       elevation: 0,
-      iconTheme: IconThemeData(color: Colors.white),
+      iconTheme: IconThemeData(color: ColorsManager.green),
       titleTextStyle: TextStyle(
         color: Colors.white,
         fontSize: 20,

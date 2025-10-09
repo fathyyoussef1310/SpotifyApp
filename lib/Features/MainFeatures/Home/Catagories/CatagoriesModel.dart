@@ -21,7 +21,7 @@ class CategoryItem extends StatelessWidget
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10.h,horizontal: 16.w),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30.r),
+        borderRadius: BorderRadius.circular(20.r),
         border: Border.all(color: ColorsManager.green),
         color: isSelected?selectedBackgroundColor : unselectedBackgroundColor,
       ),
