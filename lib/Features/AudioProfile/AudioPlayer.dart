@@ -21,7 +21,7 @@ class _SimpleAudioPlayerState extends State<SimpleAudioPlayer> {
   @override
   void initState()
   {
-    super.initState();
+     super.initState();
     Player.onDurationChanged.listen((d)=>setState(() {
       duration=d;
     }));
