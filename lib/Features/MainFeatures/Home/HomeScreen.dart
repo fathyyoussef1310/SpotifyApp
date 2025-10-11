@@ -1,12 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:spotifyyapp/Confiq/ThemeManager.dart';
 import 'package:spotifyyapp/Controllers/ThemeController.dart';
 import 'package:spotifyyapp/Core/ImagesManager.dart';
-import 'package:spotifyyapp/Features/AudioProfile/SongsItem.dart';
-import 'package:spotifyyapp/Features/MainFeatures/Home/Catagories/Catagories.dart';
+import 'package:spotifyyapp/Logic/BloC/Logictracks.dart';
+import 'package:spotifyyapp/data/user_repo.dart';
 import '../../../Core/ColorsManager.dart';
-import '../../AudioProfile/songs.dart';
+import '../../AudioProfile/AudioPlayer.dart';
 import 'Catagories/CatagoriesModel.dart';
 
 class Homescreen extends StatefulWidget {
@@ -18,85 +22,69 @@ class Homescreen extends StatefulWidget {
 
 int cIndex = 0;
 
-List<Catagories> catagories = [
-  Catagories(name: "All", icon: Icons.all_inclusive_rounded),
-  Catagories(name: "Songs", icon: Icons.music_note),
-  Catagories(name: "Podcasts", icon: Icons.podcasts),
-];
-List<songs> songsList = [
-  songs(name: "3enba - Mosim El Nabr", path: 'assets/Audio/3enba_mosim_el_nabr.m4a'),
-  songs(name: "Abd El Fatah El Greny - Ashof Fek Youm", path: 'assets/Audio/AbdElFatahElGreny - AshofFekYoum .m4a'),
-  songs(name: "Nghamet El Herman", path: 'assets/Audio/NghametElherman.mp3'),
-];
 class _HomescreenState extends State<Homescreen> {
+  late final UserRepo repo = UserRepo();
+
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: catagories.length,
+    return SafeArea(
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
+          centerTitle: true,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          leading: IconButton(onPressed: () {}, icon: Icon(CupertinoIcons.search)),
           title: Image.asset(
             assetsManager.SpotifyLogo,
+            color: ColorsManager.green,
             height: 40.h,
-            width: 112.w,
+            width: 108.w,
           ),
-          centerTitle: true,
-          leading: IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.search_rounded, color: ColorsManager.green)),
           actions: [
-            IconButton(
-                onPressed: () {
-                  Get.find<ThemeController>().toggleData(true);
-                },
-                icon: const Icon(Icons.dark_mode)),
             IconButton(
                 onPressed: () {
                   Get.find<ThemeController>().toggleData(false);
                 },
-                icon: const Icon(Icons.light_mode))
+                icon: Icon(CupertinoIcons.light_max)),
+            IconButton(
+                onPressed: () {
+                  Get.find<ThemeController>().toggleData(true);
+                },
+                icon: Icon(CupertinoIcons.moon_fill)),
           ],
         ),
-        body: Column(
-          children: [
-            TabBar(
-              onTap: (value) {
-                setState(() {
-                  cIndex = value;
-                });
-              },
-              isScrollable: true,
-              indicatorColor: ColorsManager.green,
-              tabs: catagories.map((cat) {
-                int index = catagories.indexOf(cat);
-                return Tab(
-                  child: CategoryItem(
-                    category: cat,
-                    selectedBackgroundColor: Colors.transparent,
-                    unselectedBackgroundColor: Colors.transparent,
-                    selectedFourBackgroundColor: ColorsManager.green,
-                    unselectedFourBackgroundColor: ColorsManager.whiteGrey,
-                    isSelected: cIndex == index,
-                  ),
+        body: BlocProvider(
+          create: (context) => TracksCubit(repo)..fetchData(),
+          child: BlocBuilder<TracksCubit, TracksState>(
+            builder: (context, state) {
+              if (state is TrackError) {
+                return Center(
+                  child: Text("Error in Fetching Data"),
                 );
-              }).toList(),
-            ),
-            Expanded(
-              child: TabBarView(
-                children: songsList.map((cat) {
-                  return ListView.separated(
-                    itemCount: songsList.length,
-                    itemBuilder: (context, index) {
-                      final song = songsList[index];
-                      return SongsItem(song: song);
-                    }, separatorBuilder: (BuildContext context, int index)=> SizedBox(height: 1.h,),
-                  );
-                }).toList(),
-              ),
-            ),
-          ],
+              } else if (state is TrackLoading) {
+                return Center(
+                  child: CircularProgressIndicator(color: ColorsManager.green),
+                );
+              } else if (state is TrackLoaded) {
+                final suraList = state.data;
+                return ListView.separated(
+                  itemCount: suraList.length,
+                  itemBuilder: (context, index) {
+                    final sura = suraList[index];
+                    return ListTile(
+                      title:Text("${sura.surahNameArabic}"),
+                      textColor: Theme.of(context).primaryColor,
+                      subtitle: Text("${sura.surahName}"),
+                      trailing: Text("${sura.totalAyah} Ayahs"),
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) => SizedBox(height: 6.w),
+                );
+              } else {
+                return SizedBox();
+              }
+            },
+          ),
         ),
       ),
     );
