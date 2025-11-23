@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:spotifyyapp/data/Quran_response.dart';
+import '../../data/QuranResponse.dart';
 import '../../data/user_repo.dart';
 
 abstract class TracksState {}
@@ -9,7 +9,7 @@ class TrackInitial extends TracksState {}
 class TrackLoading extends TracksState {}
 
 class TrackLoaded extends TracksState {
-  final List<QuranResponse> data;
+  final QuranResponse data;
   TrackLoaded(this.data);
 }
 

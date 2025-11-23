@@ -1,120 +1,106 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:spotifyyapp/Core/ColorsManager.dart';
-import 'package:spotifyyapp/Core/ImagesManager.dart';
 
-class SimpleAudioPlayer extends StatefulWidget {
-  SimpleAudioPlayer({super.key,required this.path,required this.title});
-  final String path;
-  final String title;
+class AudioPlayerScreen extends StatefulWidget {
+  final String audioUrl;
+  final String audioname;
+
+  const AudioPlayerScreen({super.key, required this.audioUrl, required this.audioname});
+
   @override
-  State<SimpleAudioPlayer> createState() => _SimpleAudioPlayerState();
+  State<AudioPlayerScreen> createState() => _AudioPlayerScreenState();
 }
 
-class _SimpleAudioPlayerState extends State<SimpleAudioPlayer> {
-  AudioPlayer Player=AudioPlayer();
-  bool isPlaying=false;
+class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
+  final AudioPlayer player = AudioPlayer();
+  bool isPlaying = false;
   Duration duration = Duration.zero;
   Duration position = Duration.zero;
+
   @override
-  void initState()
-  {
-     super.initState();
-    Player.onDurationChanged.listen((d)=>setState(() {
-      duration=d;
-    }));
-    Player.onPositionChanged.listen((p)=>setState(() {
-      position=p;
-    }));
-    Player.onPlayerComplete.listen((_)=>setState(() {
-      position=Duration.zero;
-      isPlaying=false;
-    }));
-  }
-  void toggle() async{
-    if(isPlaying){
-      await Player.pause();
-    }else {
-      await Player.play(AssetSource(widget.path.replaceAll('assets/','')));
-    }
-    setState(() {
-      isPlaying=!isPlaying;
+  void initState() {
+    super.initState();
+
+    player.onDurationChanged.listen((d) {
+      setState(() {
+        duration = d;
+      });
+    });
+    player.onPositionChanged.listen((p) {
+      setState(() {
+        position = p;
+      });
+    });
+    player.onPlayerStateChanged.listen((state) {
+      setState(() {
+        isPlaying = state == PlayerState.playing;
+      });
     });
   }
-  String formattime(Duration d){
-    String twoDigits(int n) => n.toString().padLeft(2, '0');
-    final minutes = twoDigits(d.inMinutes.remainder(60));
-    final seconds = twoDigits(d.inSeconds.remainder(60));
-    return '$minutes : $seconds';
+
+  Future<void> toggleAudio() async {
+    if (isPlaying) {
+      await player.pause();
+    } else {
+      await player.play(UrlSource(widget.audioUrl));
+    }
+    setState(() {
+      isPlaying = !isPlaying;
+    });
   }
+
+  String formatTime(Duration d) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    return "${twoDigits(d.inMinutes.remainder(60))}:${twoDigits(d.inSeconds.remainder(60))}";
+  }
+
+  @override
+  void dispose() {
+    player.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
+        title: Text(widget.audioname),
         centerTitle: true,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        title: Text("Now Playing",style:Theme.of(context).textTheme.titleMedium?.copyWith(
-          color: ColorsManager.green,
-        ),),
-        actions: [
-          IconButton(onPressed: (){}, icon:Icon(Icons.lyrics,color: ColorsManager.green,)),
-        ],
       ),
-      body: Column(
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Center(
-                child: Container(
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  width: 335.w,
-                  height: 370.h,
-                  child: Image.asset(assetsManager.SpotifyLogo),
-                ),
-              ),
-              Text(widget.title,style: Theme.of(context).textTheme.bodyLarge,),
-              Text("SingerName is"),
-              SizedBox(height: 40.h,),
-              Slider(
-                min: 0,
-                activeColor: ColorsManager.green,
-                inactiveColor: ColorsManager.whiteGrey,
-                max: duration.inSeconds.toDouble(),
-                value: position.inSeconds.clamp(0, duration.inSeconds).toDouble(), onChanged: (value) async {
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Slider(
+              min: 0,
+              max: duration.inSeconds.toDouble(),
+              value: position.inSeconds.toDouble().clamp(0, duration.inSeconds.toDouble()),
+              onChanged: (value) async {
                 final newPosition = Duration(seconds: value.toInt());
-                await Player.seek(newPosition);
-              },),
-              Row(
-                children: [
-                  Text(formattime(position),style: Theme.of(context).textTheme.bodySmall,),
-                  Spacer(),
-                  Text(formattime(duration-position),style: Theme.of(context).textTheme.bodySmall,)
-                ],
+                await player.seek(newPosition);
+              },
+              activeColor: ColorsManager.green,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(formatTime(position), style: TextStyle(color: ColorsManager.green)),
+                Text(formatTime(duration - position), style: TextStyle(color: ColorsManager.green)),
+              ],
+            ),
+            SizedBox(height: 20),
+            Center(
+              child: IconButton(
+                iconSize: 64,
+                icon: Icon(isPlaying ? CupertinoIcons.pause : CupertinoIcons.play),
+                onPressed: toggleAudio,
               ),
-              SizedBox(height: 50.h,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton(onPressed: (){}, icon: Icon(Icons.favorite,size: 30,color: ColorsManager.green,)),
-                  IconButton(onPressed: (){}, icon: Icon(Icons.skip_previous,size: 40,color: ColorsManager.green,)),
-                  Center(
-                    child: IconButton(onPressed: (){
-                      toggle();
-                    }, icon: isPlaying? Icon(Icons.pause_circle_filled_sharp,color: ColorsManager.green,size: 40):
-                    Icon(Icons.play_circle_fill_outlined,color: ColorsManager.green,size: 40,),),
-                  ),
-                  IconButton(onPressed: (){}, icon: Icon(Icons.skip_next,size: 40,color: ColorsManager.green,)),
-                  IconButton(onPressed: (){}, icon: Icon(Icons.repeat,size: 40,color: ColorsManager.green,)),
-                ],
-              ),
-              SizedBox(height: 10.h,),
-            ],
-          )
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }

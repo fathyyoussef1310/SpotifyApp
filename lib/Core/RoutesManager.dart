@@ -21,6 +21,7 @@ class RoutesManager {
   static const String favorites='/favourites';
   static const String chooseLoginRegister = '/chooseLoginRegister';
   static const String  choosetheme= '/chooseTheme';
+  static const String  Audioplayer= '/Audio';
   static Route<dynamic>? getRoute(RouteSettings settings) {
     switch (settings.name) {
       case chooseTheme:

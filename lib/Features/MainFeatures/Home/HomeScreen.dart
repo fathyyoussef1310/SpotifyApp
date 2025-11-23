@@ -10,7 +10,7 @@ import 'package:spotifyyapp/Core/ImagesManager.dart';
 import 'package:spotifyyapp/Logic/BloC/Logictracks.dart';
 import 'package:spotifyyapp/data/user_repo.dart';
 import '../../../Core/ColorsManager.dart';
-import '../../AudioProfile/AudioPlayer.dart';
+import 'package:spotifyyapp/Features/AudioProfile/AudioPlayer.dart';
 import 'Catagories/CatagoriesModel.dart';
 
 class Homescreen extends StatefulWidget {
@@ -65,22 +65,25 @@ class _HomescreenState extends State<Homescreen> {
                 return Center(
                   child: CircularProgressIndicator(color: ColorsManager.green),
                 );
-              } else if (state is TrackLoaded) {
-                final suraList = state.data;
+              } else if(state is TrackLoaded)
+              {
+                final suraList = state.data.data ?? [];
                 return ListView.separated(
-                  itemCount: suraList.length,
-                  itemBuilder: (context, index) {
-                    final sura = suraList[index];
-                    return ListTile(
-                      title:Text("${sura.surahNameArabic}"),
-                      textColor: Theme.of(context).primaryColor,
-                      subtitle: Text("${sura.surahName}"),
-                      trailing: Text("${sura.totalAyah} Ayahs"),
-                    );
-                  },
-                  separatorBuilder: (BuildContext context, int index) => SizedBox(height: 6.w),
+                    itemCount: suraList.length,
+                    separatorBuilder: (context,index)=>SizedBox(height: 8.sp,),
+                    itemBuilder:(context,index){
+                      final sura = suraList[index];
+                      return ListTile(
+                        title: Text(sura.name??" ",style: GoogleFonts.inter(color: ColorsManager.green,fontWeight: FontWeight.bold,fontSize: 20.sp),),
+                        subtitle: Text(sura.englishName ?? "",style: GoogleFonts.inter(color: ColorsManager.green,fontWeight: FontWeight.bold,fontSize: 20.sp)),
+                        trailing:Text("${sura.numberOfAyahs}",style: GoogleFonts.inter(color: ColorsManager.green,fontSize: 20.sp),),
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder:(_)=>AudioPlayerScreen(audioUrl: sura.audioFull?.one?? " ", audioname: sura.name?? "Unknown Surah")));
+                        },
+                      );
+                    }
                 );
-              } else {
+              }else {
                 return SizedBox();
               }
             },
