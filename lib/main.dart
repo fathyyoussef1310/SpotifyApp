@@ -7,6 +7,7 @@ import 'package:spotifyyapp/Features/ChooseTheme.dart';
 import 'package:spotifyyapp/Features/Onboarding/OnboardingScreen.dart';
 import 'Controllers/ThemeController.dart';
 import 'Core/RoutesManager.dart';
+import 'Features/MainFeatures/Home/HomeScreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           onGenerateRoute: RoutesManager.getRoute,
           theme: themeController.theme,
-          home: !onboardingSeen ? OnBoardingScreen() : !completeAuth ? Choosetheme() : ChooseLoginRegister(),
+          home: !onboardingSeen ? OnBoardingScreen() : !completeAuth ? Homescreen() : ChooseLoginRegister(),
         ));
       },
     );
