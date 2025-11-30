@@ -39,10 +39,10 @@ class _LayoutScreenState extends State<LayoutScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _buildIcon(Icons.home,0),
-            _buildIcon(Icons.explore,1),
-            _buildIcon(Icons.favorite_border,2),
-            _buildIcon(Icons.person,3),
+            _buildIcon(CupertinoIcons.home,0),
+            _buildIcon(CupertinoIcons.radiowaves_right,1),
+            _buildIcon(CupertinoIcons.heart_solid,2),
+            _buildIcon(CupertinoIcons.person,3),
           ],
         ),
       ),

@@ -1,7 +1,10 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:spotifyyapp/Core/ColorsManager.dart';
+import 'package:spotifyyapp/Core/ImagesManager.dart';
 
 class AudioPlayerScreen extends StatefulWidget {
   final String audioUrl;
@@ -46,9 +49,6 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
     } else {
       await player.play(UrlSource(widget.audioUrl));
     }
-    setState(() {
-      isPlaying = !isPlaying;
-    });
   }
 
   String formatTime(Duration d) {
@@ -64,39 +64,55 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.audioname),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
+    return ScreenUtilInit(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          title: Text(widget.audioname,style: GoogleFonts.farro(color: ColorsManager.green,fontSize: 30.sp,fontWeight: FontWeight.bold),),
+          centerTitle: true,
+        ),
+        body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Slider(
-              min: 0,
-              max: duration.inSeconds.toDouble(),
-              value: position.inSeconds.toDouble().clamp(0, duration.inSeconds.toDouble()),
-              onChanged: (value) async {
-                final newPosition = Duration(seconds: value.toInt());
-                await player.seek(newPosition);
-              },
-              activeColor: ColorsManager.green,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(formatTime(position), style: TextStyle(color: ColorsManager.green)),
-                Text(formatTime(duration - position), style: TextStyle(color: ColorsManager.green)),
-              ],
-            ),
-            SizedBox(height: 20),
             Center(
-              child: IconButton(
-                iconSize: 64,
-                icon: Icon(isPlaying ? CupertinoIcons.pause : CupertinoIcons.play),
-                onPressed: toggleAudio,
+              child: Image.asset(assetsManager.SpotifyLogo,
+                color: ColorsManager.green,
+                width: double.infinity,
+                height: 90.sp,
+              ),
+            ),
+            SizedBox(height: 40.h,),
+            Padding(
+              padding:  REdgeInsets.all(40),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Slider(
+                    min: 0,
+                    max: duration.inSeconds.toDouble(),
+                    value: position.inSeconds.toDouble().clamp(0, duration.inSeconds.toDouble()),
+                    onChanged: (value) async {
+                      final newPosition = Duration(seconds: value.toInt());
+                      await player.seek(newPosition);
+                    },
+                    activeColor: ColorsManager.green,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(formatTime(position), style: TextStyle(color: ColorsManager.green)),
+                      Text(formatTime(duration), style: TextStyle(color: ColorsManager.green)),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Center(
+                    child: IconButton(
+                      iconSize: 64,
+                      icon: Icon(isPlaying ? CupertinoIcons.pause : CupertinoIcons.play),
+                      onPressed: toggleAudio,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

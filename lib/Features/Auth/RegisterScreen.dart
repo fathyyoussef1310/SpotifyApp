@@ -43,14 +43,7 @@ class Registerscreen extends StatelessWidget {
                 ],
               ),
             ),
-            Text(
-              "Register",
-              style: GoogleFonts.poppins(
-                color: ColorsManager.whiteGrey,
-                fontWeight: FontWeight.bold,
-                fontSize: 30.sp,
-              ),
-            ),
+            Text("Register", style: GoogleFonts.poppins(color: ColorsManager.whiteGrey, fontWeight: FontWeight.bold, fontSize: 30.sp,),),
             SizedBox(height: 30.sp),
             Customtextformfield(
               hint: "Name",

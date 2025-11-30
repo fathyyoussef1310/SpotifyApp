@@ -13,7 +13,6 @@ class ChooseLoginRegister extends StatelessWidget {
   Future<void> _completeAuth(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('_completeAuth', true);
-    Navigator.pushReplacementNamed(context, RoutesManager.chooseLoginRegister);
   }
 
   @override
