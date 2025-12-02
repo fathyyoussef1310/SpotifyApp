@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotifyyapp/Features/Auth/Choose_Login_register.dart';
 import 'package:spotifyyapp/Features/ChooseTheme.dart';
+import 'package:spotifyyapp/Features/MainFeatures/LayoutScreen.dart';
 import 'package:spotifyyapp/Features/Onboarding/OnboardingScreen.dart';
 import 'Controllers/ThemeController.dart';
 import 'Core/RoutesManager.dart';
@@ -41,7 +42,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           onGenerateRoute: RoutesManager.getRoute,
           theme: themeController.theme,
-          home: !onboardingSeen ? OnBoardingScreen() : !completeAuth ? Homescreen() : ChooseLoginRegister(),
+          home: !onboardingSeen ? OnBoardingScreen() : !completeAuth ? LayoutScreen() : ChooseLoginRegister(),
         ));
       },
     );

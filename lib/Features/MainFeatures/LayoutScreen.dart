@@ -2,8 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:spotifyyapp/Features/MainFeatures/profile/ProfileScreen.dart';
+import 'package:spotifyyapp/data/user_repo.dart';
 import '../../Core/ColorsManager.dart';
-import 'Explore/ExploreScreen.dart';
+import 'Radio/RadioScreen.dart';
 import 'Favourites songs/FavoritesSongs.dart';
 import 'Home/HomeScreen.dart';
 
@@ -17,9 +18,9 @@ class LayoutScreen extends StatefulWidget {
 class _LayoutScreenState extends State<LayoutScreen> {
   int _SelectedTab = 0;
 
-  List<Widget> _tabs = [
+  final List<Widget> _tabs = [
     Homescreen(),
-    ExploreScreen(),
+    RadioScreen(repo: UserRepo(),),
     Favoritessongs(),
     Profilescreen(),
   ];
