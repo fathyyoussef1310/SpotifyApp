@@ -9,7 +9,9 @@ class UserRepo {
     if (response.statusCode == 200) {
       final ress=jsonDecode(response.body);
       return QuranResponse.fromJson(ress);
-    } else {
+    }
+    else
+    {
       throw Exception("Error fetching data: ${response.statusCode}");
     }
   }
@@ -23,4 +25,5 @@ class UserRepo {
        throw Exception("Error in FetchingData");
     }
   }
+
 }

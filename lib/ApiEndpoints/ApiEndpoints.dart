@@ -7,4 +7,5 @@ class _Auth {
   final String register = "auth/register";
   final String UpdateProfile = "profile";
   final String Forgetpass="auth/reset-password";
+  final String getProfile="profile";
 }

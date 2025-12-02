@@ -28,6 +28,7 @@ flutter_bloc, cubit for state management
 GetX for reactive theme & auth management
 
 flutter_screenutil for responsive layouts
+flutter_Firebase for Authentication
 
 Audioplayers / just_audio for audio playback
 

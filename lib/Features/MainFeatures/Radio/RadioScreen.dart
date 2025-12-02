@@ -24,7 +24,7 @@ class _RadioScreenState extends State<RadioScreen> {
     return  Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("RadioScreen",style: GoogleFonts.inter(color: ColorsManager.green,fontSize: 22.sp,fontWeight: FontWeight.bold),),
+        title: Text("RadioPage",style: GoogleFonts.inter(color: ColorsManager.green,fontSize: 22.sp,fontWeight: FontWeight.bold),),
       ),
      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: BlocProvider(create: (context)=> RadioCubit(widget.repo)..fetchRadioStations(),
@@ -44,7 +44,7 @@ class _RadioScreenState extends State<RadioScreen> {
               final radio=radios[index];
               return ListTile(
                 title: Text("${radio.name}",style: GoogleFonts.inter(color: ColorsManager.green,fontSize: 19.sp,fontWeight: FontWeight.bold),),
-                subtitle:Text("${radio.recentDate}",style: GoogleFonts.inter(color: ColorsManager.green,fontSize: 10.sp,fontWeight: FontWeight.w400),),
+                subtitle:Text("${radio.url}",style: GoogleFonts.inter(color: ColorsManager.green,fontSize: 10.sp,fontWeight: FontWeight.w400),),
                 onTap: (){
                   Navigator.push(context,CupertinoPageRoute(builder: (_)=> AudioPlayerScreen(audioUrl: radio.url??" ", audioname: radio.name??" ")));
                 },

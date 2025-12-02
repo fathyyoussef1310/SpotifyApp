@@ -38,7 +38,7 @@ class RoutesManager {
       case chooseLoginRegister:
         return CupertinoPageRoute(builder: (_) => const ChooseLoginRegister());
     case profileScreen:
-      return CupertinoPageRoute(builder: (_) => const Profilescreen());
+      return CupertinoPageRoute(builder: (_) =>  Profilescreen());
     case layoutScreen:
       return CupertinoPageRoute(builder: (_) => LayoutScreen());
     case homeScreen:

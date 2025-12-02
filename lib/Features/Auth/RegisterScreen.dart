@@ -14,7 +14,6 @@ import '../../Core/Widgets/TextButton.dart';
 class Registerscreen extends StatelessWidget {
   Registerscreen({super.key});
   final RegisterController registerController = Get.put(RegisterController());
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,15 +72,7 @@ class Registerscreen extends StatelessWidget {
               label: "Confirm Your Password",
               color: ColorsManager.whiteGrey,
               suffixIcon: Icons.visibility_off,
-              controller: registerController.ConfirmPassController,
-            ),
-            SizedBox(height: 20.h),
-            Customtextformfield(
-              hint: "Phone",
-              label: "Phone",
-              color: ColorsManager.whiteGrey,
-              suffixIcon: Icons.phone,
-              controller: registerController.phoneController,
+              controller: registerController.confirmPassController,
             ),
             SizedBox(height: 40.sp),
             Row(
@@ -90,7 +81,7 @@ class Registerscreen extends StatelessWidget {
                   child: Obx(() {
                     return registerController.isLoading.value ? Center(child: CircularProgressIndicator(color: ColorsManager.green)) : CustomElevatedButton(
                       onPressed: () {
-                        registerController.RegisterWithEmail();
+                        registerController.registerWithEmail();
                       },
                       title: "Create One",
                       backgroundColor: ColorsManager.green,

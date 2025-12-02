@@ -1,31 +1,29 @@
-import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
-import 'package:spotifyyapp/ApiEndpoints/ApiEndpoints.dart';
-import 'package:spotifyyapp/Core/ColorsManager.dart';
-import 'package:spotifyyapp/Core/RoutesManager.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+
+import '../Core/ColorsManager.dart';
+import '../Core/RoutesManager.dart';
 
 class RegisterController extends GetxController {
   var isLoading = false.obs;
-
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  TextEditingController ConfirmPassController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
-
+  TextEditingController confirmPassController = TextEditingController();
   bool _isValidEmail(String email) {
     final regex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     return regex.hasMatch(email);
   }
-
-  Future<void> RegisterWithEmail() async {
-    if (nameController.text.trim().isEmpty ||
-        emailController.text.trim().isEmpty ||
-        passwordController.text.trim().isEmpty ||
-        ConfirmPassController.text.trim().isEmpty ||
-        phoneController.text.trim().isEmpty) {
+  Future<void> registerWithEmail() async {
+    if (nameController.text.isEmpty ||
+        emailController.text.isEmpty ||
+        passwordController.text.isEmpty ||
+        confirmPassController.text.isEmpty) {
       Get.snackbar(
         "Error",
         "All fields are required",
@@ -45,7 +43,8 @@ class RegisterController extends GetxController {
       return;
     }
 
-    if (passwordController.text.trim() != ConfirmPassController.text.trim()) {
+    if (passwordController.text.trim() !=
+        confirmPassController.text.trim()) {
       Get.snackbar(
         "Error",
         "Passwords do not match",
@@ -55,34 +54,31 @@ class RegisterController extends GetxController {
       return;
     }
 
-    isLoading.value = true;
-
-    Uri uri = Uri.parse(ApiEndpoints.baseUrl + ApiEndpoints.auth.register);
-
     try {
-      Map<String, dynamic> body = {
-        'name': nameController.text.trim(),
-        'email': emailController.text.trim(),
-        'password': passwordController.text.trim(),
-        'confirmPassword': ConfirmPassController.text.trim(),
-        'phone': phoneController.text.trim(),
-        'avaterId': 1,
-      };
-      http.Response response = await http.post(uri, headers: {"Content-Type": "application/json"}, body: jsonEncode(body));
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        Get.snackbar("Success", "Sign Up Successful ❤️",
-          backgroundColor: ColorsManager.green,
-          colorText: ColorsManager.white,
-        );
-        Get.offAllNamed(RoutesManager.loginScreen);
-      } else {
-        Get.snackbar("Error", "Failed: ${response.statusCode}\n${response.body}",
-          backgroundColor: ColorsManager.red,
-          colorText: ColorsManager.white,
-        );
-      }
-    } catch (error) {
-      Get.snackbar("Exception", error.toString(),
+      isLoading.value = true;
+
+      /// 🔥 Create user
+      UserCredential userCredential =
+      await _auth.createUserWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+
+      await userCredential.user!
+          .updateDisplayName(nameController.text.trim());
+
+      Get.snackbar(
+        "Success",
+        "Account created successfully",
+        backgroundColor: ColorsManager.green,
+        colorText: ColorsManager.white,
+      );
+
+      Get.offAllNamed(RoutesManager.loginScreen);
+    } on FirebaseAuthException catch (e) {
+      Get.snackbar(
+        "Error",
+        e.message ?? "Registration failed",
         backgroundColor: ColorsManager.red,
         colorText: ColorsManager.white,
       );
@@ -91,13 +87,13 @@ class RegisterController extends GetxController {
     }
   }
 
+
   @override
-  void onClose() {
+  void dispose() {
     nameController.dispose();
     emailController.dispose();
     passwordController.dispose();
-    ConfirmPassController.dispose();
-    phoneController.dispose();
-    super.onClose();
+    confirmPassController.dispose();
+    super.dispose();
   }
 }

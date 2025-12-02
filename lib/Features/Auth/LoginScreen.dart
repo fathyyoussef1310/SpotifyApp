@@ -11,11 +11,9 @@ import '../../Core/ImagesManager.dart';
 import '../../Core/RoutesManager.dart';
 import '../../Core/Widgets/CustomeElevatedButton.dart';
 import '../../Core/Widgets/TextButton.dart';
-
 class Loginscreen extends StatelessWidget {
    Loginscreen({super.key});
-   LoginController  loginController=Get.put(LoginController());
-
+   AuthController  loginController=Get.put(AuthController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,9 +42,9 @@ class Loginscreen extends StatelessWidget {
                     Text("Sign In",style: GoogleFonts.poppins(color: ColorsManager.whiteGrey,fontSize: 50.sp,fontWeight: FontWeight.bold),),
                     SizedBox(height: 10.h,),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("You Don't Have One ?",style: GoogleFonts.poppins(color: Theme.of(context).primaryColorDark,fontSize: 18.sp,fontWeight: FontWeight.w200)),
+                        Text("You Don't Have One ?",style: GoogleFonts.poppins(color: ColorsManager.Greyissh,fontSize: 18.sp,fontWeight: FontWeight.w200)),
                         CustomTextButton(title: "Click Here ",color: ColorsManager.green, onPressed: (){
                           Navigator.pushNamed(context, RoutesManager.registerScreen);
                         }, size: 20.sp,)
@@ -66,7 +64,13 @@ class Loginscreen extends StatelessWidget {
                     SizedBox(height: 11.h,),
                     Padding(
                       padding:  REdgeInsets.all(10.0),
-                      child: Customtextformfield(controller:loginController.passwordController,hint: "Password", label: "Password", color:ColorsManager.whiteGrey,suffixIcon: Icons.visibility_off),
+                      child: Customtextformfield(
+                          controller:loginController.passwordController,
+                          hint: "Password",
+                          label: "Password",
+                          color:ColorsManager.whiteGrey,
+                          suffixIcon: Icons.visibility
+                      ),
                     ),
                     SizedBox(height: 2.sp,),
                     Align(
@@ -79,11 +83,15 @@ class Loginscreen extends StatelessWidget {
                       padding:  REdgeInsets.all(20.0.sp),
                       child: Row(
                         children: [
-                          Expanded(child: Obx((){
+                          Expanded(
+                              child: Obx((){
                             return loginController.isLoading.value ? Center(child: CircularProgressIndicator()):
                                 CustomElevatedButton(onPressed: (){
-                                  loginController.LoginWithEmail();
-                                }, title: "Login In", backgroundColor: ColorsManager.green, foregroundColor:ColorsManager.white);
+                                  loginController.loginWithEmail();
+                                },
+                                    title: "Login In",
+                                    backgroundColor: ColorsManager.green,
+                                    foregroundColor:ColorsManager.white);
                           })
                           )],
                       ),
