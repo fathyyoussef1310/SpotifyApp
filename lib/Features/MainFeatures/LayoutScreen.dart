@@ -22,7 +22,7 @@ class _LayoutScreenState extends State<LayoutScreen> {
     Homescreen(),
     RadioScreen(repo: UserRepo(),),
     Favoritessongs(),
-    Profilescreen(),
+    ProfileScreen(),
   ];
 
   @override

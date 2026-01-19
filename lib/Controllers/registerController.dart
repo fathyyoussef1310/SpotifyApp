@@ -4,6 +4,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Core/ColorsManager.dart';
 import '../Core/RoutesManager.dart';
@@ -45,8 +46,7 @@ class RegisterController extends GetxController {
 
     if (passwordController.text.trim() !=
         confirmPassController.text.trim()) {
-      Get.snackbar(
-        "Error",
+      Get.snackbar("Error",
         "Passwords do not match",
         backgroundColor: ColorsManager.red,
         colorText: ColorsManager.white,
@@ -56,20 +56,14 @@ class RegisterController extends GetxController {
 
     try {
       isLoading.value = true;
-
-      /// 🔥 Create user
-      UserCredential userCredential =
-      await _auth.createUserWithEmailAndPassword(
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
-
-      await userCredential.user!
-          .updateDisplayName(nameController.text.trim());
-
-      Get.snackbar(
-        "Success",
-        "Account created successfully",
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('_completeAuth', true);
+      await userCredential.user!.updateDisplayName(nameController.text.trim());
+      Get.snackbar("Success", "Account created successfully",
         backgroundColor: ColorsManager.green,
         colorText: ColorsManager.white,
       );

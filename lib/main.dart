@@ -1,56 +1,56 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-// Your feature imports
-import 'package:spotifyyapp/Features/Auth/Choose_Login_register.dart';
-import 'package:spotifyyapp/Features/Auth/LoginScreen.dart';
-import 'package:spotifyyapp/Features/Onboarding/OnboardingScreen.dart';
-import 'package:spotifyyapp/Features/MainFeatures/LayoutScreen.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'Features/Onboarding/OnboardingScreen.dart';
+import 'Features/Auth/Choose_Login_register.dart';
+import 'Features/MainFeatures/LayoutScreen.dart';
 import 'Controllers/ThemeController.dart';
 import 'Core/RoutesManager.dart';
 import 'firebase_options.dart';
+
 void main() async {
+  WidgetsBinding widgetsBinding =
   WidgetsFlutterBinding.ensureInitialized();
-
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  bool onboardingSeen = false;
+  bool completeAuth = false;
   try {
-    // 1. Load SharedPreferences
-    final prefs = await SharedPreferences.getInstance();
-    final bool onboardingSeen = prefs.getBool('onboarding_seen') ?? false;
-    final bool completeAuth = prefs.getBool('completeAuth') ?? false;
-
-    // 2. SAFE FIREBASE INITIALIZATION
-    // Check if Firebase is already initialized to avoid the [duplicate-app] error
     if (Firebase.apps.isEmpty) {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
-      ).timeout(const Duration(seconds: 10));
-      debugPrint("Firebase initialized successfully.");
+      );
+      debugPrint("✅ Firebase initialized successfully");
     } else {
-      debugPrint("Firebase already initialized, skipping...");
+      debugPrint("ℹ️ Firebase already initialized, skipping");
     }
-    final themeController = Get.put(ThemeController());
-    await themeController.loadData().timeout(const Duration(seconds: 5), onTimeout: () {
-      debugPrint("Theme loading timed out.");
-    });
-
-    runApp(MyApp(
-      onboardingSeen: onboardingSeen,
-      completeAuth: completeAuth,
-      themeController: themeController,
-    ));
   } catch (e) {
-    debugPrint("Initialization Error: $e");
-    if (e.toString().contains('duplicate-app')) {
-      runApp(MyApp(
-        onboardingSeen: false,
-        completeAuth: false,
-        themeController: Get.put(ThemeController()),
-      ));
-    }
+    debugPrint("⚠️ Firebase initialization failed: $e");
   }
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    onboardingSeen = prefs.getBool('onboarding_seen') ?? false;
+    completeAuth = prefs.getBool('completeAuth') ?? false;
+    debugPrint(
+        "ℹ️ Onboarding: $onboardingSeen | CompleteAuth: $completeAuth");
+  } catch (e) {
+    debugPrint("⚠️ SharedPreferences error: $e");
+  }
+  final themeController = Get.put(ThemeController());
+  try {
+    await themeController.loadData();
+  } catch (e) {
+    debugPrint("⚠️ ThemeController load error: $e");
+  }
+  FlutterNativeSplash.remove();
+
+  runApp(MyApp(
+    onboardingSeen: onboardingSeen,
+    completeAuth: completeAuth,
+    themeController: themeController,
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -69,11 +69,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget getInitialScreen() {
       if (!onboardingSeen) {
-        return  OnBoardingScreen();
+        return OnBoardingScreen();
       } else if (!completeAuth) {
-        return  ChooseLoginRegister();
+        return ChooseLoginRegister();
       } else {
-        return  LayoutScreen();
+        return LayoutScreen();
       }
     }
 
@@ -82,12 +82,14 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        return Obx(() => GetMaterialApp(
-          debugShowCheckedModeBanner: false,
-          onGenerateRoute: RoutesManager.getRoute,
-          theme: themeController.theme,
-          home: getInitialScreen(),
-        ));
+        return Obx(
+              () => GetMaterialApp(
+            debugShowCheckedModeBanner: false,
+            onGenerateRoute: RoutesManager.getRoute,
+            theme: themeController.theme,
+            home: getInitialScreen(),
+          ),
+        );
       },
     );
   }

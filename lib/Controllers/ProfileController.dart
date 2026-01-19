@@ -1,48 +1,31 @@
-import 'dart:convert';
-import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-import '../ApiEndpoints/ApiEndpoints.dart';
-
-class Profilecontroller extends GetxController {
+import 'package:spotifyyapp/Core/ColorsManager.dart';
+class ProfileController extends GetxController {
   var isLoading = false.obs;
-
-  TextEditingController emailController = TextEditingController();
-  TextEditingController nameController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  var name = ''.obs;
+  var email = ''.obs;
   Future<void> getProfile() async {
-    isLoading.value = true;
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token') ?? "";
-    if (token.isEmpty) {
-      Get.snackbar("Error", "Token not found, please Ensure Your Data again");
-      isLoading.value = false;
-      return;
-    }
-    final uri = Uri.parse(ApiEndpoints.baseUrl + ApiEndpoints.auth.getProfile,);
     try {
-      final response = await http.get(uri,
-        headers: {
-          "Authorization": "Bearer $token",
-        },
-      );
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        nameController.text = data['user']['name'];
-        emailController.text = data['user']['email'];
+      isLoading.value = true;
+      User? user = _auth.currentUser;
+      if (user != null) {
+        name.value = user.displayName ?? "No User Name Added";
+        email.value = user.email ?? "No Email";
       } else {
-        Get.snackbar("Error", "Failed to fetch profile");
+        Get.snackbar("Error", "Please try again",
+          backgroundColor: ColorsManager.red,
+          colorText: ColorsManager.white,
+        );
       }
     } catch (e) {
-      Get.snackbar("ERROR", e.toString());
+      Get.snackbar(
+        "Error", "Error: $e", backgroundColor: ColorsManager.red,
+        colorText: ColorsManager.white,
+      );
     } finally {
       isLoading.value = false;
     }
-  }
-
-  @override
-  void onInit() {
-    super.onInit();
-    getProfile();
   }
 }
