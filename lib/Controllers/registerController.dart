@@ -63,7 +63,7 @@ class RegisterController extends GetxController {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('_completeAuth', true);
       await userCredential.user!.updateDisplayName(nameController.text.trim());
-      Get.snackbar("Success", "Account created successfully",
+      Get.snackbar("Success", _auth.authStateChanges().toString(),
         backgroundColor: ColorsManager.green,
         colorText: ColorsManager.white,
       );

@@ -15,7 +15,8 @@ class UserRepo {
       throw Exception("Error fetching data: ${response.statusCode}");
     }
   }
-  Future<RadioResponses>fetchRadioStation()async{
+  Future<RadioResponses>fetchRadioStation()async
+  {
     final uri=Uri.parse("https://www.mp3quran.net/api/v3/radios?language=ar");
     final response= await http.get(uri);
     if(response.statusCode==200){

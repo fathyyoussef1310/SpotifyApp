@@ -9,7 +9,6 @@ class AuthController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
   var isLoading = false.obs;
   Future<void> loginWithEmail() async {
     try {
@@ -18,14 +17,12 @@ class AuthController extends GetxController {
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
-
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('completeAuth', true);
-      Get.snackbar("Success", "Logged in successfully");
+      Get.snackbar("Success",_auth.authStateChanges().toString());
       Get.offAllNamed(RoutesManager.layoutScreen);
     } on FirebaseAuthException catch (e) {
-      Get.snackbar(
-        "Login Error", e.message ?? "Something went wrong",
+      Get.snackbar("Login Error", e.message ?? "Something went wrong",
       );
     } catch (e) {
       Get.snackbar("Error", e.toString());

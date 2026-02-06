@@ -1,4 +1,3 @@
-
 class QuranResponse {
   QuranResponse({
       this.code, 
@@ -63,7 +62,6 @@ class AudioFull {
     return map;
   }
 }
-
 class Data {
   Data({
     this.number,
@@ -104,5 +102,7 @@ class Data {
     }
     return map;
   }
+
+  void operator [](String other) {}
 
 }

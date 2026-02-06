@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:spotifyyapp/Features/MainFeatures/Favourites%20songs/FavouritesManager.dart';
 import 'Features/Onboarding/OnboardingScreen.dart';
 import 'Features/Auth/Choose_Login_register.dart';
 import 'Features/MainFeatures/LayoutScreen.dart';
@@ -57,7 +59,6 @@ class MyApp extends StatelessWidget {
   final ThemeController themeController;
   final bool onboardingSeen;
   final bool completeAuth;
-
   const MyApp({
     super.key,
     required this.themeController,
@@ -77,20 +78,25 @@ class MyApp extends StatelessWidget {
       }
     }
 
-    return ScreenUtilInit(
-      designSize: const Size(430, 932),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (context, child) {
-        return Obx(
-              () => GetMaterialApp(
-            debugShowCheckedModeBanner: false,
-            onGenerateRoute: RoutesManager.getRoute,
-            theme: themeController.theme,
-            home: getInitialScreen(),
-          ),
-        );
-      },
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_)=> Favouritesmanager())
+      ],
+      child: ScreenUtilInit(
+        designSize: const Size(430, 932),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        builder: (context, child) {
+          return Obx(
+                () => GetMaterialApp(
+              debugShowCheckedModeBanner: false,
+              onGenerateRoute: RoutesManager.getRoute,
+              theme: themeController.theme,
+              home: getInitialScreen(),
+            ),
+          );
+        },
+      ),
     );
   }
 }
