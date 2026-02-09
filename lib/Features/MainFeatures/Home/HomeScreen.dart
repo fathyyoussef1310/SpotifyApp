@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:spotifyyapp/Confiq/ThemeManager.dart';
 import 'package:spotifyyapp/Controllers/ThemeController.dart';
@@ -56,10 +57,6 @@ class _HomescreenState extends State<Homescreen> {
         ),
         body: Column(
           children: [
-            Padding(
-              padding:  REdgeInsets.all(18.0.sp),
-              child: Customtextformfield(hint: "Search...", label: "Search", color:ColorsManager.green),
-            ),
             Expanded(
               child: BlocProvider(
                 create: (context) => TracksCubit(repo)..fetchData(),
@@ -68,7 +65,7 @@ class _HomescreenState extends State<Homescreen> {
                     if (state is TrackError) {
                       return Center(child: Text("Error in Fetching Data"),);
                     } else if (state is TrackLoading) {
-                      return Center(child: CircularProgressIndicator(color: ColorsManager.green),);
+                      return Center(child:Lottie.asset("assets/images/Reading in Quran.json", width: 800.w), );
                     } else if(state is TrackLoaded)
                     {
                       final suraList = state.data.data ?? [];

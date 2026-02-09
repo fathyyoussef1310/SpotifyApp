@@ -22,7 +22,6 @@ class _LayoutScreenState extends State<LayoutScreen> {
     Homescreen(),
     RadioScreen(repo: UserRepo(),),
     Favoritessongs(),
-    ProfileScreen(),
   ];
 
   @override
@@ -43,7 +42,6 @@ class _LayoutScreenState extends State<LayoutScreen> {
             _buildIcon(CupertinoIcons.home,0),
             _buildIcon(CupertinoIcons.radiowaves_right,1),
             _buildIcon(CupertinoIcons.heart_solid,2),
-            _buildIcon(CupertinoIcons.person,3),
           ],
         ),
       ),

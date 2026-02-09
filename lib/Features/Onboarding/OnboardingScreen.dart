@@ -28,11 +28,6 @@ class OnBoardingScreen extends StatelessWidget {
       backgroundColor: ColorsManager.darkBlack,
       body: Stack(
         children: [
-          Image.asset(
-            assetsManager.onBoardingScreen,
-            fit: BoxFit.cover,
-            width: double.infinity,
-          ),
           Container(color: Colors.black.withOpacity(0.4)),
           Padding(
             padding: REdgeInsets.symmetric(horizontal: 24.w),
