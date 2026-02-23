@@ -5,8 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:spotifyyapp/AuthBloc/auth_bloc.dart';
 import 'package:spotifyyapp/AuthCubit/auth_cubit.dart';
-import 'package:spotifyyapp/AuthCubit/auth_state.dart';
 import '../../Core/ColorsManager.dart';
 import '../../Core/CustomTextFormField.dart';
 import '../../Core/ImagesManager.dart';
@@ -93,19 +93,19 @@ class _LoginscreenState extends State<Loginscreen> {
                       child: Expanded(
                         child: Column(
                           children: [
-                            BlocConsumer<AuthCubit,AuthState>(builder: (context,state){
+                            BlocConsumer<AuthBloc,AuthState>(builder: (context,state){
                               if(state  is AuthLoading){
                                 return Center(child: CircularProgressIndicator(color: ColorsManager.green,),);
                               }
                               return CustomElevatedButton(onPressed: (){
-                                context.read<AuthCubit>().login(email.text.trim(), Password.text.trim());
+                                context.read<AuthBloc>().add(LoginReguest(Password: Password.text.trim(), email: email.text.trim()));
                               }, title: "Log In",
                                   backgroundColor: ColorsManager.green, foregroundColor: ColorsManager.white);
                             }, listener:(context,state){
                               if(state is AuthAuthenticated){
                                 Navigator.pushReplacementNamed(context, RoutesManager.layoutScreen);
                               }
-                              if(state is AuthUnAuthenticated){
+                              if(state is AuthUnAuthenticated &&  state.error != null){
                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                     content: Text(state.error,),
                                     backgroundColor: ColorsManager.red,

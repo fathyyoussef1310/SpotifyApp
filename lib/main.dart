@@ -6,6 +6,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:spotifyyapp/AuthBloc/auth_bloc.dart';
 import 'package:spotifyyapp/AuthCubit/auth_cubit.dart';
 import 'package:spotifyyapp/Features/MainFeatures/Favourites%20songs/FavouritesManager.dart';
 import 'Features/Onboarding/OnboardingScreen.dart';
@@ -16,8 +17,7 @@ import 'Core/RoutesManager.dart';
 import 'firebase_options.dart';
 
 void main() async {
-  WidgetsBinding widgetsBinding =
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   bool onboardingSeen = false;
   bool completeAuth = false;
@@ -37,8 +37,7 @@ void main() async {
     final prefs = await SharedPreferences.getInstance();
     onboardingSeen = prefs.getBool('onboarding_seen') ?? false;
     completeAuth = prefs.getBool('completeAuth') ?? false;
-    debugPrint(
-        "ℹ️ Onboarding: $onboardingSeen | CompleteAuth: $completeAuth");
+    debugPrint("ℹ️ Onboarding: $onboardingSeen | CompleteAuth: $completeAuth");
   } catch (e) {
     debugPrint("⚠️ SharedPreferences error: $e");
   }
@@ -49,9 +48,8 @@ void main() async {
     debugPrint("⚠️ ThemeController load error: $e");
   }
   FlutterNativeSplash.remove();
-
   runApp(BlocProvider(
-    create: (context) => AuthCubit(),
+    create: (context) => AuthBloc(),
     child: MyApp(
       onboardingSeen: onboardingSeen,
       completeAuth: completeAuth,
