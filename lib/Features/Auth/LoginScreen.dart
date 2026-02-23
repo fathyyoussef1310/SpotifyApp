@@ -1,19 +1,28 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../Controllers/LoginController.dart';
+import 'package:spotifyyapp/AuthCubit/auth_cubit.dart';
+import 'package:spotifyyapp/AuthCubit/auth_state.dart';
 import '../../Core/ColorsManager.dart';
 import '../../Core/CustomTextFormField.dart';
 import '../../Core/ImagesManager.dart';
 import '../../Core/RoutesManager.dart';
 import '../../Core/Widgets/CustomeElevatedButton.dart';
 import '../../Core/Widgets/TextButton.dart';
-class Loginscreen extends StatelessWidget {
-   Loginscreen({super.key});
-   AuthController  loginController=Get.put(AuthController());
+class Loginscreen extends StatefulWidget {
+  Loginscreen({super.key});
+
+  @override
+  State<Loginscreen> createState() => _LoginscreenState();
+}
+
+class _LoginscreenState extends State<Loginscreen> {
+  final TextEditingController email=TextEditingController();
+  final TextEditingController Password=TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,13 +45,13 @@ class Loginscreen extends StatelessWidget {
               ),
             ),
             Align(
-                 alignment: Alignment.center,
+                alignment: Alignment.center,
                 child: Column(
                   children: [
                     Text("Sign In",style: GoogleFonts.poppins(color: ColorsManager.whiteGrey,fontSize: 50.sp,fontWeight: FontWeight.bold),),
                     SizedBox(height: 10.h,),
                     Row(
-                       mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text("You Don't Have One ?",style: GoogleFonts.poppins(color: ColorsManager.Greyissh,fontSize: 18.sp,fontWeight: FontWeight.w200)),
                         CustomTextButton(title: "Click Here ",color: ColorsManager.green, onPressed: (){
@@ -58,18 +67,18 @@ class Loginscreen extends StatelessWidget {
                         label: "Email or Username",
                         color: ColorsManager.whiteGrey,
                         prefixIcon: Icons.email_outlined,
-                        controller: loginController.emailController,
+                        controller:email,
                       ),
                     ),
                     SizedBox(height: 11.h,),
                     Padding(
                       padding:  REdgeInsets.all(10.0),
                       child: Customtextformfield(
-                          controller:loginController.passwordController,
                           hint: "Password",
                           label: "Password",
                           color:ColorsManager.whiteGrey,
-                          suffixIcon: Icons.visibility
+                          suffixIcon: Icons.visibility,
+                         controller:Password,
                       ),
                     ),
                     SizedBox(height: 2.sp,),
@@ -81,19 +90,31 @@ class Loginscreen extends StatelessWidget {
                     ),
                     Padding(
                       padding:  REdgeInsets.all(20.0.sp),
-                      child: Row(
-                        children: [
-                          Expanded(
-                              child: Obx((){
-                            return loginController.isLoading.value ? Center(child: CircularProgressIndicator()):
-                                CustomElevatedButton(onPressed: (){
-                                  loginController.loginWithEmail();
-                                },
-                                    title: "Login In",
-                                    backgroundColor: ColorsManager.green,
-                                    foregroundColor:ColorsManager.white);
-                          })
-                          )],
+                      child: Expanded(
+                        child: Column(
+                          children: [
+                            BlocConsumer<AuthCubit,AuthState>(builder: (context,state){
+                              if(state  is AuthLoading){
+                                return Center(child: CircularProgressIndicator(color: ColorsManager.green,),);
+                              }
+                              return CustomElevatedButton(onPressed: (){
+                                context.read<AuthCubit>().login(email.text.trim(), Password.text.trim());
+                              }, title: "Log In",
+                                  backgroundColor: ColorsManager.green, foregroundColor: ColorsManager.white);
+                            }, listener:(context,state){
+                              if(state is AuthAuthenticated){
+                                Navigator.pushReplacementNamed(context, RoutesManager.layoutScreen);
+                              }
+                              if(state is AuthUnAuthenticated){
+                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                    content: Text(state.error,),
+                                    backgroundColor: ColorsManager.red,
+                                  ),
+                                );
+                              }
+                            })
+                          ],
+                        ),
                       ),
                     ),
                     Row(

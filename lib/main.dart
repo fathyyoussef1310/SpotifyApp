@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:spotifyyapp/AuthCubit/auth_cubit.dart';
 import 'package:spotifyyapp/Features/MainFeatures/Favourites%20songs/FavouritesManager.dart';
 import 'Features/Onboarding/OnboardingScreen.dart';
 import 'Features/Auth/Choose_Login_register.dart';
@@ -48,10 +50,13 @@ void main() async {
   }
   FlutterNativeSplash.remove();
 
-  runApp(MyApp(
-    onboardingSeen: onboardingSeen,
-    completeAuth: completeAuth,
-    themeController: themeController,
+  runApp(BlocProvider(
+    create: (context) => AuthCubit(),
+    child: MyApp(
+      onboardingSeen: onboardingSeen,
+      completeAuth: completeAuth,
+      themeController: themeController,
+    ),
   ));
 }
 
@@ -59,6 +64,7 @@ class MyApp extends StatelessWidget {
   final ThemeController themeController;
   final bool onboardingSeen;
   final bool completeAuth;
+
   const MyApp({
     super.key,
     required this.themeController,
@@ -80,7 +86,7 @@ class MyApp extends StatelessWidget {
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_)=> Favouritesmanager())
+        ChangeNotifierProvider(create: (_) => Favouritesmanager())
       ],
       child: ScreenUtilInit(
         designSize: const Size(430, 932),
@@ -88,12 +94,13 @@ class MyApp extends StatelessWidget {
         splitScreenMode: true,
         builder: (context, child) {
           return Obx(
-                () => GetMaterialApp(
-              debugShowCheckedModeBanner: false,
-              onGenerateRoute: RoutesManager.getRoute,
-              theme: themeController.theme,
-              home: getInitialScreen(),
-            ),
+                () =>
+                GetMaterialApp(
+                  debugShowCheckedModeBanner: false,
+                  onGenerateRoute: RoutesManager.getRoute,
+                  theme: themeController.theme,
+                  home: getInitialScreen(),
+                ),
           );
         },
       ),
